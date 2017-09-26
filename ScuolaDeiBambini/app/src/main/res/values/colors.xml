@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#8EA9E9</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffff</color>
+    <color name="titlebar">#1F5BC4</color>
 </resources>

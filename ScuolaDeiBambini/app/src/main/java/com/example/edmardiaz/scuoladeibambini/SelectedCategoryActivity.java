@@ -20,8 +20,10 @@ public class SelectedCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // fullscreen
+        /*
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        */
 
         // load the layout
         setContentView(R.layout.activity_selected_category);
