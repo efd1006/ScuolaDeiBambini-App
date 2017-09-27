@@ -1,17 +1,13 @@
 package com.example.edmardiaz.scuoladeibambini;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -26,14 +22,12 @@ import me.drakeet.materialdialog.MaterialDialog;
 public class SelectedCategoryActivity extends AppCompatActivity {
 
     ImageView img_header, img_italian, img_english;
-    ImageButton btn_next, btn_back, btn_play, btn_home;
+    ImageButton btn_next, btn_back, btn_play, btn_activity;
     ArrayList<Integer> main_image = new ArrayList<>();
     ArrayList<Integer> english = new ArrayList<>();
     ArrayList<Integer> italian = new ArrayList<>();
-    ArrayList<Integer> imageId = new ArrayList<>();
     int counter = 0;
     MediaPlayer mp;
-    String category_name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +42,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
 
         // get the intent passed value
         Intent i = getIntent();
-         category_name = i.getStringExtra("category_name");
+        String category_name = i.getStringExtra("category_name");
 
         // setup the toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
@@ -112,12 +106,19 @@ public class SelectedCategoryActivity extends AppCompatActivity {
             }
         });
 
-        // handle home button
-        btn_home = (ImageButton)findViewById(R.id.btn_home);
-        btn_home.setOnClickListener(new View.OnClickListener() {
+        // handle activity button
+        btn_activity = (ImageButton)findViewById(R.id.btn_activity);
+        btn_activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(SelectedCategoryActivity.this, AssessmentActivity.class);
+                Intent i = getIntent();
+                String c = i.getStringExtra("category_name");
+                intent.putExtra("category_name", c);
+                intent.putExtra("imageId", main_image);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
             }
         });
     }
@@ -141,8 +142,11 @@ public class SelectedCategoryActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(SelectedCategoryActivity.this, AssessmentActivity.class);
-                        intent.putExtra("category_name", category_name);
+                        Intent i = getIntent();
+                        String c = i.getStringExtra("category_name");
+                        intent.putExtra("category_name", c);
                         startActivity(intent);
+                        finish();
                         overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
                     }
                 })
@@ -176,6 +180,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
 
         return imageId;
     }
+
     // get italian equivalent
     public ArrayList<Integer> loadItalianEquivalent (String category_name) {
 
@@ -197,6 +202,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
 
         return imageId;
     }
+
     // get the main image
     public ArrayList<Integer> loadImage(String category_name) {
 
@@ -227,6 +233,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
         img_italian.setImageResource(italian.get(counter));
     }
 
+    // play the audio
     public void listen(int counter) {
 
         if(counter == 0) {
