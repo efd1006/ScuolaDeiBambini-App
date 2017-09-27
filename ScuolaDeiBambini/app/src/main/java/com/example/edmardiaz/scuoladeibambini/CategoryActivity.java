@@ -91,5 +91,7 @@ public class CategoryActivity extends AppCompatActivity {
         Intent intent = new Intent(CategoryActivity.this, SelectedCategoryActivity.class);
         intent.putExtra("category_name", category_name);
         startActivity(intent);
+        overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
+
     }
 }

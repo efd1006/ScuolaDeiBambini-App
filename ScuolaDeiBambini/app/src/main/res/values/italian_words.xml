@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="zero">Zero</string>
+    <string name="uno">Uno</string>
+    <string name="due">Due</string>
+    <string name="tre">Tre</string>
+    <string name="quattro">Quattro</string>
+    <string name="cinque">Cinque</string>
+    <string name="sei">Sei</string>
+    <string name="sette">Sette</string>
+    <string name="otto">Otto</string>
+    <string name="nove">Nove</string>
+    <string name="dieci">Dieci</string>
+</resources>

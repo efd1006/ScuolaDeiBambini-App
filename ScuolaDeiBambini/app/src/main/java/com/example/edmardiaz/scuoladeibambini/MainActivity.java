@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
             }
         });
 

@@ -16,8 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CategoryActivity"></activity>
-        <activity android:name=".SelectedCategoryActivity"></activity>
+        <activity android:name=".CategoryActivity" />
+        <activity android:name=".SelectedCategoryActivity" />
+
+        <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+        <activity android:name=".AssessmentActivity"></activity>
     </application>
 
 </manifest>
