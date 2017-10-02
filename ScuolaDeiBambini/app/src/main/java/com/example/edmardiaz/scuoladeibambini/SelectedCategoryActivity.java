@@ -145,6 +145,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
                         Intent i = getIntent();
                         String c = i.getStringExtra("category_name");
                         intent.putExtra("category_name", c);
+                        intent.putExtra("imageId", main_image);
                         startActivity(intent);
                         finish();
                         overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
