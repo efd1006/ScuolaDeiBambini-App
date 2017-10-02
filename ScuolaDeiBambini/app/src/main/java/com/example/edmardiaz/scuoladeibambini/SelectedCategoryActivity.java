@@ -233,6 +233,28 @@ public class SelectedCategoryActivity extends AppCompatActivity {
         img_italian.setImageResource(italian.get(counter));
     }
 
+    // get audio
+    public ArrayList<Integer> loadAudio(String category_name) {
+
+        ArrayList<Integer> audioId = new ArrayList<>();
+
+        if(category_name.equals("NUMERI")) {
+            audioId.add(R.raw.zero);
+            audioId.add(R.raw.one);
+            audioId.add(R.raw.two);
+            audioId.add(R.raw.three);
+            audioId.add(R.raw.four);
+            audioId.add(R.raw.five);
+            audioId.add(R.raw.six);
+            audioId.add(R.raw.seven);
+            audioId.add(R.raw.eight);
+            audioId.add(R.raw.nine);
+            audioId.add(R.raw.ten);
+        }
+
+        return audioId;
+    }
+
     // play the audio
     public void listen(int counter) {
 
