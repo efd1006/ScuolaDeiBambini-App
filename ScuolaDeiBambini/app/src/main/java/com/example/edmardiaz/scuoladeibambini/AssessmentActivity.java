@@ -62,26 +62,6 @@ public class AssessmentActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // handle EN button event
-        btn_en.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                instruction_1.setImageResource(R.drawable.instruction_1);
-                instruction_2.setImageResource(R.drawable.instruction_2);
-                state = "EN";
-            }
-        });
-
-        // handle IT button event
-        btn_it.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                instruction_1.setImageResource(R.drawable.it_instruction_1);
-                instruction_2.setImageResource(R.drawable.it_instruction_2);
-                state = "IT";
-            }
-        });
-
         initializeChoices(in.getStringExtra("category_name"));
     }
 
@@ -96,6 +76,27 @@ public class AssessmentActivity extends AppCompatActivity {
             Collections.shuffle(choices);
             changeView(index, imageId);
             showListenButton();
+
+            // handle EN button event
+            btn_en.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    instruction_1.setImageResource(R.drawable.instruction_1);
+                    instruction_2.setImageResource(R.drawable.instruction_2);
+                    state = "EN";
+                }
+            });
+
+            // handle IT button event
+            btn_it.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    instruction_1.setImageResource(R.drawable.it_instruction_1);
+                    instruction_2.setImageResource(R.drawable.it_instruction_2);
+                    state = "IT";
+                }
+            });
+
             // handle btn_a event
             btn_a.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -166,6 +167,27 @@ public class AssessmentActivity extends AppCompatActivity {
             });
         }else {
             hideListenButton();
+            // handle EN button event
+            instruction_1.setImageResource(R.drawable.en_v2_instruction);
+            instruction_2.setImageResource(R.drawable.en_v2_instruction_2);
+            btn_en.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    instruction_1.setImageResource(R.drawable.en_v2_instruction);
+                    instruction_2.setImageResource(R.drawable.en_v2_instruction_2);
+                    state = "EN";
+                }
+            });
+
+            // handle IT button event
+            btn_it.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    instruction_1.setImageResource(R.drawable.it_v2_instruction);
+                    instruction_2.setImageResource(R.drawable.it_v2_instruction_2);
+                    state = "IT";
+                }
+            });
         }
     }
 
@@ -179,6 +201,7 @@ public class AssessmentActivity extends AppCompatActivity {
         radio_b.setVisibility(View.INVISIBLE);
         radio_c.setVisibility(View.INVISIBLE);
         radio_d.setVisibility(View.INVISIBLE);
+        btn_next.setVisibility(View.INVISIBLE);
 
         btn_1.setVisibility(View.VISIBLE);
         btn_2.setVisibility(View.VISIBLE);
@@ -196,6 +219,7 @@ public class AssessmentActivity extends AppCompatActivity {
         radio_b.setVisibility(View.VISIBLE);
         radio_c.setVisibility(View.VISIBLE);
         radio_d.setVisibility(View.VISIBLE);
+        btn_next.setVisibility(View.VISIBLE);
 
         btn_1.setVisibility(View.INVISIBLE);
         btn_2.setVisibility(View.INVISIBLE);
