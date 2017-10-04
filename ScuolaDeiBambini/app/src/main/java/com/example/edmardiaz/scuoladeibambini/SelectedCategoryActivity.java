@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.logging.Handler;
 
 import me.drakeet.materialdialog.MaterialDialog;
 
@@ -42,7 +43,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
 
         // get the intent passed value
         Intent i = getIntent();
-        String category_name = i.getStringExtra("category_name");
+        final String category_name = i.getStringExtra("category_name");
 
         // setup the toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
@@ -55,6 +56,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
 
         // getImages
         main_image = loadImage(category_name);
+        System.out.println(main_image.size());
         english = loadEnglishEquivalent(category_name);
         italian = loadItalianEquivalent(category_name);
 
@@ -63,17 +65,18 @@ public class SelectedCategoryActivity extends AppCompatActivity {
         img_english = (ImageView)findViewById(R.id.img_english);
         img_italian = (ImageView)findViewById(R.id.img_italian);
         changeView(0);
-        listen(0);
+
+        listen(0,category_name);
 
         // handle next button event
         btn_next = (ImageButton)findViewById(R.id.btn_next);
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(counter < 10) {
+                if(counter < main_image.size()-1) {
                     counter = counter + 1;
                     changeView(counter);
-                    listen(counter);
+                    listen(counter,category_name);
                 }else {
                     showDialog();
                 }
@@ -85,7 +88,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
         btn_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listen(counter);
+                listen(counter,category_name);
             }
         });
 
@@ -97,11 +100,11 @@ public class SelectedCategoryActivity extends AppCompatActivity {
                 if(counter > 0){
                     counter = counter - 1;
                     changeView(counter);
-                    listen(counter);
+                    listen(counter,category_name);
                 }else {
                     counter = 0;
                     changeView(counter);
-                    listen(counter);
+                    listen(counter,category_name);
                 }
             }
         });
@@ -165,7 +168,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
 
         ArrayList<Integer> imageId = new ArrayList<>();
 
-        if(category_name.equals("NUMERI")) {
+        if(category_name.equals(getString(R.string.category_name_numeri))) {
             imageId.add(R.drawable.en_zero);
             imageId.add(R.drawable.en_one);
             imageId.add(R.drawable.en_two);
@@ -177,6 +180,40 @@ public class SelectedCategoryActivity extends AppCompatActivity {
             imageId.add(R.drawable.en_eight);
             imageId.add(R.drawable.en_nine);
             imageId.add(R.drawable.en_ten);
+        }else if(category_name.equals(getString(R.string.category_name_alimenti))) {
+            imageId.add(R.drawable.en_banana);
+            imageId.add(R.drawable.en_bread);
+            imageId.add(R.drawable.en_cake);
+            imageId.add(R.drawable.en_cheese);
+            imageId.add(R.drawable.en_eggs);
+            imageId.add(R.drawable.en_milk);
+            imageId.add(R.drawable.en_steak);
+            imageId.add(R.drawable.en_rice);
+            imageId.add(R.drawable.en_sandwich);
+            imageId.add(R.drawable.en_strawberry);
+        }else if(category_name.equals(getString(R.string.category_name_scuola))) {
+            imageId.add(R.drawable.en_bag);
+            imageId.add(R.drawable.en_book);
+            imageId.add(R.drawable.en_chair);
+            imageId.add(R.drawable.en_eraser);
+            imageId.add(R.drawable.en_microscope);
+            imageId.add(R.drawable.en_notebook);
+            imageId.add(R.drawable.en_pen);
+            imageId.add(R.drawable.en_pencil);
+            imageId.add(R.drawable.en_pencilcase);
+            imageId.add(R.drawable.en_scissors);
+            imageId.add(R.drawable.en_sharpener);
+        }else if(category_name.equals(getString(R.string.category_name_casa))) {
+            imageId.add(R.drawable.en_bathroom);
+            imageId.add(R.drawable.en_bedroom);
+            imageId.add(R.drawable.en_dinningroom);
+            imageId.add(R.drawable.en_garage);
+            imageId.add(R.drawable.en_garden);
+            imageId.add(R.drawable.en_hall);
+            imageId.add(R.drawable.en_house);
+            imageId.add(R.drawable.en_kitchen);
+            imageId.add(R.drawable.en_livingroom);
+            imageId.add(R.drawable.en_toilet);
         }
 
         return imageId;
@@ -187,7 +224,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
 
         ArrayList<Integer> imageId = new ArrayList<>();
 
-        if(category_name.equals("NUMERI")) {
+        if(category_name.equals(getString(R.string.category_name_numeri))) {
             imageId.add(R.drawable.it_zero);
             imageId.add(R.drawable.it_one);
             imageId.add(R.drawable.it_two);
@@ -199,6 +236,40 @@ public class SelectedCategoryActivity extends AppCompatActivity {
             imageId.add(R.drawable.it_eight);
             imageId.add(R.drawable.it_nine);
             imageId.add(R.drawable.it_ten);
+        }else if(category_name.equals(getString(R.string.category_name_alimenti))) {
+            imageId.add(R.drawable.it_banana);
+            imageId.add(R.drawable.it_bread);
+            imageId.add(R.drawable.it_cake);
+            imageId.add(R.drawable.it_cheese);
+            imageId.add(R.drawable.it_eggs);
+            imageId.add(R.drawable.it_milk);
+            imageId.add(R.drawable.it_steak);
+            imageId.add(R.drawable.it_rice);
+            imageId.add(R.drawable.it_sandwich);
+            imageId.add(R.drawable.it_strawberry);
+        }else if(category_name.equals(getString(R.string.category_name_scuola))) {
+            imageId.add(R.drawable.it_bag);
+            imageId.add(R.drawable.it_book);
+            imageId.add(R.drawable.it_chair);
+            imageId.add(R.drawable.it_eraser);
+            imageId.add(R.drawable.it_microscope);
+            imageId.add(R.drawable.it_notebook);
+            imageId.add(R.drawable.it_pen);
+            imageId.add(R.drawable.it_pencil);
+            imageId.add(R.drawable.it_pencilcase);
+            imageId.add(R.drawable.it_scissors);
+            imageId.add(R.drawable.it_sharpener);
+        }else if(category_name.equals(getString(R.string.category_name_casa))) {
+            imageId.add(R.drawable.it_bathroom);
+            imageId.add(R.drawable.it_bedroom);
+            imageId.add(R.drawable.it_dinningroom);
+            imageId.add(R.drawable.it_garage);
+            imageId.add(R.drawable.it_garden);
+            imageId.add(R.drawable.it_hall);
+            imageId.add(R.drawable.it_house);
+            imageId.add(R.drawable.it_kitchen);
+            imageId.add(R.drawable.it_livingroom);
+            imageId.add(R.drawable.it_toilet);
         }
 
         return imageId;
@@ -209,7 +280,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
 
         ArrayList<Integer> imageId = new ArrayList<>();
 
-        if(category_name.equals("NUMERI")) {
+        if(category_name.equals(getString(R.string.category_name_numeri))) {
             imageId.add(R.drawable.zero);
             imageId.add(R.drawable.one);
             imageId.add(R.drawable.two);
@@ -221,6 +292,40 @@ public class SelectedCategoryActivity extends AppCompatActivity {
             imageId.add(R.drawable.eight);
             imageId.add(R.drawable.nine);
             imageId.add(R.drawable.ten);
+        }else if(category_name.equals(getString(R.string.category_name_alimenti))) {
+            imageId.add(R.drawable.banana);
+            imageId.add(R.drawable.bread);
+            imageId.add(R.drawable.cake);
+            imageId.add(R.drawable.cheese);
+            imageId.add(R.drawable.eggs);
+            imageId.add(R.drawable.milk);
+            imageId.add(R.drawable.pork);
+            imageId.add(R.drawable.rice);
+            imageId.add(R.drawable.sandwich);
+            imageId.add(R.drawable.strawberry);
+        }else if(category_name.equals(getString(R.string.category_name_scuola))) {
+            imageId.add(R.drawable.bag);
+            imageId.add(R.drawable.book);
+            imageId.add(R.drawable.chair);
+            imageId.add(R.drawable.eraser);
+            imageId.add(R.drawable.microscope);
+            imageId.add(R.drawable.notebook);
+            imageId.add(R.drawable.pen);
+            imageId.add(R.drawable.pencil);
+            imageId.add(R.drawable.pencilcase);
+            imageId.add(R.drawable.scissors);
+            imageId.add(R.drawable.sharpener);
+        }else if(category_name.equals(getString(R.string.category_name_casa))) {
+            imageId.add(R.drawable.bathroom);
+            imageId.add(R.drawable.bedroom);
+            imageId.add(R.drawable.dinning);
+            imageId.add(R.drawable.garage);
+            imageId.add(R.drawable.garden);
+            imageId.add(R.drawable.hall);
+            imageId.add(R.drawable.house);
+            imageId.add(R.drawable.kitchen);
+            imageId.add(R.drawable.livingroom);
+            imageId.add(R.drawable.toilet);
         }
 
         return imageId;
@@ -239,7 +344,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
 
         ArrayList<Integer> audioId = new ArrayList<>();
 
-        if(category_name.equals("NUMERI")) {
+        if(category_name.equals(getString(R.string.category_name_numeri))) {
             audioId.add(R.raw.zero);
             audioId.add(R.raw.one);
             audioId.add(R.raw.two);
@@ -251,113 +356,433 @@ public class SelectedCategoryActivity extends AppCompatActivity {
             audioId.add(R.raw.eight);
             audioId.add(R.raw.nine);
             audioId.add(R.raw.ten);
+        }else if(category_name.equals(getString(R.string.category_name_alimenti))) {
+            audioId.add(R.raw.banana);
+            audioId.add(R.raw.bread);
+            audioId.add(R.raw.cake);
+            audioId.add(R.raw.cheese);
+            audioId.add(R.raw.eggs);
+            audioId.add(R.raw.milk);
+            audioId.add(R.raw.pork);
+            audioId.add(R.raw.rice);
+            audioId.add(R.raw.panino);
+            audioId.add(R.raw.strawberry);
+        }else if(category_name.equals(getString(R.string.category_name_scuola))) {
+            audioId.add(R.raw.bag);
+            audioId.add(R.raw.book);
+            audioId.add(R.raw.chair);
+            audioId.add(R.raw.eraser);
+            audioId.add(R.raw.microscope);
+            audioId.add(R.raw.notebook);
+            audioId.add(R.raw.pen);
+            audioId.add(R.raw.pencil);
+            audioId.add(R.raw.pencilcase);
+            audioId.add(R.raw.scissors);
+            audioId.add(R.raw.sharpener);
+        }else if(category_name.equals(getString(R.string.category_name_casa))) {
+            audioId.add(R.raw.bathroom);
+            audioId.add(R.raw.bedroom);
+            audioId.add(R.raw.dinningroom);
+            audioId.add(R.raw.garage);
+            audioId.add(R.raw.garden);
+            audioId.add(R.raw.hallway);
+            audioId.add(R.raw.house);
+            audioId.add(R.raw.kitchen);
+            audioId.add(R.raw.livingroom);
+            audioId.add(R.raw.toilet);
         }
 
         return audioId;
     }
 
     // play the audio
-    public void listen(int counter) {
-
-        if(counter == 0) {
-            mp = MediaPlayer.create(this,R.raw.zero);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 1) {
-            mp = MediaPlayer.create(this,R.raw.one);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 2) {
-            mp = MediaPlayer.create(this,R.raw.two);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 3) {
-            mp = MediaPlayer.create(this,R.raw.three);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 4) {
-            mp = MediaPlayer.create(this,R.raw.four);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 5) {
-            mp = MediaPlayer.create(this,R.raw.five);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 6) {
-            mp = MediaPlayer.create(this,R.raw.six);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 7) {
-            mp = MediaPlayer.create(this,R.raw.seven);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 8) {
-            mp = MediaPlayer.create(this,R.raw.eight);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 9) {
-            mp = MediaPlayer.create(this,R.raw.nine);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
-        }else if (counter == 10) {
-            mp = MediaPlayer.create(this,R.raw.ten);
-            mp.start();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mediaPlayer.release();
-                }
-            });
+    public void listen(int counter, String category_name) {
+        if(category_name.equals(getString(R.string.category_name_numeri))) {
+            if (counter == 0) {
+                mp = MediaPlayer.create(this, R.raw.zero);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 1) {
+                mp = MediaPlayer.create(this, R.raw.one);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 2) {
+                mp = MediaPlayer.create(this, R.raw.two);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 3) {
+                mp = MediaPlayer.create(this, R.raw.three);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 4) {
+                mp = MediaPlayer.create(this, R.raw.four);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 5) {
+                mp = MediaPlayer.create(this, R.raw.five);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 6) {
+                mp = MediaPlayer.create(this, R.raw.six);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 7) {
+                mp = MediaPlayer.create(this, R.raw.seven);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 8) {
+                mp = MediaPlayer.create(this, R.raw.eight);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 9) {
+                mp = MediaPlayer.create(this, R.raw.nine);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 10) {
+                mp = MediaPlayer.create(this, R.raw.ten);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            }
+        }else if(category_name.equals(getString(R.string.category_name_alimenti))) {
+            if (counter == 0) {
+                mp = MediaPlayer.create(this, R.raw.banana);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 1) {
+                mp = MediaPlayer.create(this, R.raw.bread);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 2) {
+                mp = MediaPlayer.create(this, R.raw.cake);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 3) {
+                mp = MediaPlayer.create(this, R.raw.cheese);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 4) {
+                mp = MediaPlayer.create(this, R.raw.eggs);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 5) {
+                mp = MediaPlayer.create(this, R.raw.milk);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 6) {
+                mp = MediaPlayer.create(this, R.raw.pork);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 7) {
+                mp = MediaPlayer.create(this, R.raw.rice);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 8) {
+                mp = MediaPlayer.create(this, R.raw.panino);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 9) {
+                mp = MediaPlayer.create(this, R.raw.strawberry);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            }
+        }else if(category_name.equals(getString(R.string.category_name_scuola))) {
+            if (counter == 0) {
+                mp = MediaPlayer.create(this, R.raw.bag);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 1) {
+                mp = MediaPlayer.create(this, R.raw.book);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 2) {
+                mp = MediaPlayer.create(this, R.raw.chair);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 3) {
+                mp = MediaPlayer.create(this, R.raw.eraser);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 4) {
+                mp = MediaPlayer.create(this, R.raw.microscope);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 5) {
+                mp = MediaPlayer.create(this, R.raw.notebook);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 6) {
+                mp = MediaPlayer.create(this, R.raw.pen);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 7) {
+                mp = MediaPlayer.create(this, R.raw.pencil);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 8) {
+                mp = MediaPlayer.create(this, R.raw.pencilcase);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 9) {
+                mp = MediaPlayer.create(this, R.raw.scissors);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 10) {
+                mp = MediaPlayer.create(this, R.raw.sharpener);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            }
+        }else if(category_name.equals(getString(R.string.category_name_casa))) {
+            if (counter == 0) {
+                mp = MediaPlayer.create(this, R.raw.bathroom);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 1) {
+                mp = MediaPlayer.create(this, R.raw.bedroom);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 2) {
+                mp = MediaPlayer.create(this, R.raw.dinningroom);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 3) {
+                mp = MediaPlayer.create(this, R.raw.garage);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 4) {
+                mp = MediaPlayer.create(this, R.raw.garden);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 5) {
+                mp = MediaPlayer.create(this, R.raw.hallway);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 6) {
+                mp = MediaPlayer.create(this, R.raw.house);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 7) {
+                mp = MediaPlayer.create(this, R.raw.kitchen);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 8) {
+                mp = MediaPlayer.create(this, R.raw.livingroom);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            } else if (counter == 9) {
+                mp = MediaPlayer.create(this, R.raw.toilet);
+                mp.start();
+                mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mediaPlayer.release();
+                    }
+                });
+            }
         }
     }
 }

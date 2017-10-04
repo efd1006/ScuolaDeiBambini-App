@@ -15,7 +15,7 @@ import com.example.edmardiaz.scuoladeibambini.SelectedCategoryActivity;
 
 public class CategoryActivity extends AppCompatActivity {
 
-    ImageButton btn_alphabet, btn_number, btn_food, btn_house;
+    ImageButton btn_school, btn_number, btn_food, btn_house;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +37,12 @@ public class CategoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // handle button alphabet event
-        btn_alphabet = (ImageButton)findViewById(R.id.btn_alphabet);
-        btn_alphabet.setOnClickListener(new View.OnClickListener() {
+        btn_school = (ImageButton)findViewById(R.id.btn_school);
+        btn_school.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // go to next activity with @param category_name
-                goToSelected("ALFABETO");
+                goToSelected(getString(R.string.category_name_scuola));
             }
         });
 
@@ -52,7 +52,7 @@ public class CategoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // go to next activity with @param category_name
-                goToSelected("NUMERI");
+                goToSelected(getString(R.string.category_name_numeri));
             }
         });
 
@@ -62,7 +62,7 @@ public class CategoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // go to next activity with @param category_name
-                goToSelected("ALIMENTI");
+                goToSelected(getString(R.string.category_name_alimenti));
             }
         });
 
@@ -72,7 +72,7 @@ public class CategoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // go to next activity with @param category_name
-                goToSelected("PARTI DI CASA");
+                goToSelected(getString(R.string.category_name_casa));
             }
         });
     }

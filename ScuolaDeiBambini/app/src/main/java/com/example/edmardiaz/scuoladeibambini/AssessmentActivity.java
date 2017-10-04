@@ -70,7 +70,7 @@ public class AssessmentActivity extends AppCompatActivity {
         Intent in = getIntent();
         String category_name = "Attività "+ in.getStringExtra("category_name");
         imageId = in.getIntegerArrayListExtra("imageId");
-        index = getRandomNumber(0,9);
+        index = getRandomNumber(0,imageId.size()-1);
         choices.add(index);
         makeChoices();
         Collections.shuffle(choices);
@@ -148,7 +148,7 @@ public class AssessmentActivity extends AppCompatActivity {
                     }
                     choices.clear();
                     resetRadioCheck();
-                    index = getRandomNumber(0, 9);
+                    index = getRandomNumber(0, imageId.size()-1);
                     choices.add(index);
                     makeChoices();
                     Collections.shuffle(choices);
@@ -163,6 +163,7 @@ public class AssessmentActivity extends AppCompatActivity {
 
     }
 
+    // uncheck all the radiobutton
     public void resetRadioCheck(){
         radio_a.setChecked(false);
         radio_b.setChecked(false);
@@ -170,21 +171,23 @@ public class AssessmentActivity extends AppCompatActivity {
         radio_d.setChecked(false);
     }
 
+    //generate random choices
     public void makeChoices() {
-        int x = getRandomNumber(0,9);
+        int x = getRandomNumber(0,imageId.size()-1);
 
         for(int i=0;i<3;i++) {
             if(!choices.contains(x)){
                 choices.add(x);
             }else{
                 do {
-                    x = getRandomNumber(0,9);
+                    x = getRandomNumber(0,imageId.size()-1);
                 } while(index == x || choices.contains(x));
                 choices.add(x);
             }
         }
     }
 
+    // generate random number within range
     public int getRandomNumber(int min, int max) {
         return (int)(Math.random() * ((max - min) + 1)) + min;
     }
@@ -207,12 +210,14 @@ public class AssessmentActivity extends AppCompatActivity {
         instruction_2 = (ImageView)findViewById(R.id.instruction_2);
     }
 
+    // check the correct answer
     public void checkAnswer(int correct_ans) {
         if(correct_ans == index) {
             score++;
         }
     }
 
+    // event handler for radio button events when clicked
     public void changeState() {
         // radio_a active
         radio_a.setOnClickListener(new View.OnClickListener() {
@@ -270,7 +275,6 @@ public class AssessmentActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     // play the audio
     public void listen(int index) {
@@ -376,4 +380,5 @@ public class AssessmentActivity extends AppCompatActivity {
             });
         }
     }
+
 }

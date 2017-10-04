@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Scuola Dei Bambini</string>
+    <string name="category_name_scuola">SCUOLA</string>
+    <string name="category_name_numeri">NUMERI</string>
+    <string name="category_name_alimenti">ALIMENTI</string>
+    <string name="category_name_casa">PARTI DI CASA</string>
 </resources>
