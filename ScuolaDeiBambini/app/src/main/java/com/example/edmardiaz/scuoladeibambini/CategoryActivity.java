@@ -1,6 +1,7 @@
 package com.example.edmardiaz.scuoladeibambini;
 
 import android.content.Intent;
+import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,14 +10,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.edmardiaz.scuoladeibambini.SelectedCategoryActivity;
 
+import me.drakeet.materialdialog.MaterialDialog;
+
 public class CategoryActivity extends AppCompatActivity {
 
-    ImageButton btn_school, btn_number, btn_food, btn_house;
-
+    ImageButton btn_school, btn_number, btn_food, btn_house, btn_search, btn_phrase;
+    boolean isSearching = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +79,25 @@ public class CategoryActivity extends AppCompatActivity {
                 goToSelected(getString(R.string.category_name_casa));
             }
         });
+
+        // handle button phrase
+        btn_phrase = (ImageButton)findViewById(R.id.btn_phrase);
+        btn_phrase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToSelected(getString(R.string.category_name_phrase));
+            }
+        });
+
+        // handle button search
+        btn_search = (ImageButton)findViewById(R.id.btn_search);
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isSearching = true;
+                showDialog();
+            }
+        });
     }
 
     @Override
@@ -90,8 +113,35 @@ public class CategoryActivity extends AppCompatActivity {
     public void goToSelected(String category_name) {
         Intent intent = new Intent(CategoryActivity.this, SelectedCategoryActivity.class);
         intent.putExtra("category_name", category_name);
+        intent.putExtra("isSearching", isSearching);
         startActivity(intent);
         overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
 
+    }
+    // show dialog
+    public void showDialog() {
+        final EditText contentView = new EditText(this);
+        final MaterialDialog dialog = new MaterialDialog(this);
+        dialog.setTitle("Enter Word")
+            .setContentView(contentView)
+            .setPositiveButton("Search", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                Intent intent = new Intent(CategoryActivity.this, SelectedCategoryActivity.class);
+                intent.putExtra("category_name", "Search Result");
+                intent.putExtra("isSearching", isSearching);
+                intent.putExtra("keyword", contentView.getText().toString());
+                startActivity(intent);
+                overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
+                }
+            })
+            .setNegativeButton("Cancel", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    isSearching = false;
+                    dialog.dismiss();
+                }
+            });
+        dialog.show();
     }
 }

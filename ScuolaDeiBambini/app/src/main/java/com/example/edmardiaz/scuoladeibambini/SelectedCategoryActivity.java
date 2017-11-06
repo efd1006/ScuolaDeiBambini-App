@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.logging.Handler;
@@ -23,12 +25,15 @@ import me.drakeet.materialdialog.MaterialDialog;
 public class SelectedCategoryActivity extends AppCompatActivity {
 
     ImageView img_header, img_italian, img_english;
-    ImageButton btn_next, btn_back, btn_play, btn_activity;
+    ImageButton btn_next, btn_back, btn_play, btn_activity, btn_info;
     ArrayList<Integer> main_image = new ArrayList<>();
     ArrayList<Integer> english = new ArrayList<>();
     ArrayList<Integer> italian = new ArrayList<>();
     int counter = 0;
     MediaPlayer mp;
+    boolean isSearching;
+    int id = 0;
+    String result_category="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +45,11 @@ public class SelectedCategoryActivity extends AppCompatActivity {
         */
         // load the layout
         setContentView(R.layout.activity_selected_category);
-
+        initializeComponents();
         // get the intent passed value
         Intent i = getIntent();
         final String category_name = i.getStringExtra("category_name");
-
+        isSearching = i.getBooleanExtra("isSearching",false);
         // setup the toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.app_bar);
         toolbar.setTitle(category_name);
@@ -55,75 +60,102 @@ public class SelectedCategoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // getImages
-        main_image = loadImage(category_name);
-        System.out.println(main_image.size());
-        english = loadEnglishEquivalent(category_name);
-        italian = loadItalianEquivalent(category_name);
+        if(isSearching == false) {
+            main_image = loadImage(category_name);
+            //System.out.println(main_image.size());
+            english = loadEnglishEquivalent(category_name);
+            italian = loadItalianEquivalent(category_name);
+        }else{
+            String keyword = i.getStringExtra("keyword");
+            id = searchKeyword(keyword);
+            btn_back.setVisibility(View.INVISIBLE);
+            btn_activity.setVisibility(View.INVISIBLE);
+            btn_next.setVisibility(View.INVISIBLE);
+        }
+        if(id != -1) {
+            // make a nest instance of imageviews and set view to index 0
+            changeView(id);
+            //listen(0,category_name);
 
-        // make a nest instance of imageviews and set view to index 0
-        img_header = (ImageView)findViewById(R.id.img_container);
-        img_english = (ImageView)findViewById(R.id.img_english);
-        img_italian = (ImageView)findViewById(R.id.img_italian);
-        changeView(0);
-
-        listen(0,category_name);
-
-        // handle next button event
-        btn_next = (ImageButton)findViewById(R.id.btn_next);
-        btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(counter < main_image.size()-1) {
-                    counter = counter + 1;
-                    changeView(counter);
-                    listen(counter,category_name);
-                }else {
-                    showDialog();
+            // handle next button event
+            btn_next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (counter < main_image.size() - 1) {
+                        counter = counter + 1;
+                        changeView(counter);
+                        //listen(counter, category_name);
+                    } else {
+                        showDialog();
+                    }
                 }
-            }
-        });
+            });
 
-        // handle listen button
-        btn_play = (ImageButton)findViewById(R.id.btn_listen);
-        btn_play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listen(counter,category_name);
-            }
-        });
-
-        // handle back button event
-        btn_back = (ImageButton)findViewById(R.id.btn_cat_back);
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(counter > 0){
-                    counter = counter - 1;
-                    changeView(counter);
-                    //listen(counter,category_name);
-                }else {
-                    counter = 0;
-                    changeView(counter);
-                    //listen(counter,category_name);
+            // handle listen button
+            btn_play.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(isSearching == false) {
+                        listen(counter, category_name);
+                    }else{
+                        listen(id, result_category);
+                    }
                 }
-            }
-        });
+            });
 
-        // handle activity button
-        btn_activity = (ImageButton)findViewById(R.id.btn_activity);
-        btn_activity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SelectedCategoryActivity.this, AssessmentActivity.class);
-                Intent i = getIntent();
-                String c = i.getStringExtra("category_name");
-                intent.putExtra("category_name", c);
-                intent.putExtra("imageId", main_image);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
-            }
-        });
+            // handle back button event
+            btn_back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (counter > 0) {
+                        counter = counter - 1;
+                        changeView(counter);
+                        //listen(counter,category_name);
+                    } else {
+                        counter = 0;
+                        changeView(counter);
+                        //listen(counter,category_name);
+                    }
+                }
+            });
+
+            // handle activity button
+            btn_activity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(SelectedCategoryActivity.this, AssessmentActivity.class);
+                    Intent i = getIntent();
+                    String c = i.getStringExtra("category_name");
+                    intent.putExtra("category_name", c);
+                    intent.putExtra("imageId", main_image);
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
+                }
+            });
+        }else{
+            img_header.setVisibility(View.INVISIBLE);
+            img_italian.setVisibility(View.INVISIBLE);
+            img_english.setVisibility(View.INVISIBLE);
+            btn_next.setVisibility(View.INVISIBLE);
+            btn_back.setVisibility(View.INVISIBLE);
+            btn_play.setVisibility(View.INVISIBLE);
+            btn_activity.setVisibility(View.INVISIBLE);
+            btn_info.setVisibility(View.INVISIBLE);
+            showNoResultDialog();
+        }
+    }
+
+    public void initializeComponents() {
+        img_header = (ImageView) findViewById(R.id.img_container);
+        img_english = (ImageView) findViewById(R.id.img_english);
+        img_italian = (ImageView) findViewById(R.id.img_italian);
+
+        btn_next = (ImageButton) findViewById(R.id.btn_next);
+        btn_play = (ImageButton) findViewById(R.id.btn_listen);
+        btn_back = (ImageButton) findViewById(R.id.btn_cat_back);
+        btn_activity = (ImageButton) findViewById(R.id.btn_activity);
+        btn_info = (ImageButton) findViewById(R.id.btn_info);
     }
 
     @Override
@@ -784,5 +816,66 @@ public class SelectedCategoryActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    // keywords
+    public int searchKeyword(String word) {
+        int index = -1;
+
+        String[] numbers = {"zero","one","two","three","four","five","six","seven","eight","nine","ten"};
+        String[] school = {"school bag","book","chair","eraser","microscope","notebook","pen","pencil","pencil case","scissor","sharpener"};
+        String[] foods = {"banana","bread","cake","cheese","eggs","milk","steak","rice","sandwich","strawberry"};
+        String[] house = {"bathroom","bedroom","dinning room","garage","garden","hallway","house","kitchen","living room","toilet"};
+        for(int i = 0; i < numbers.length; i++) {
+            if(word.equalsIgnoreCase(numbers[i]) && index == -1){
+                index = i;
+                result_category = getString(R.string.category_name_numeri);
+                main_image = loadImage(result_category);
+                english = loadEnglishEquivalent(result_category);
+                italian = loadItalianEquivalent(result_category);
+            }
+        }
+        for(int i = 0; i < school.length; i++) {
+            if(word.equalsIgnoreCase(school[i]) && index == -1){
+                index = i;
+                result_category = getString(R.string.category_name_scuola);
+                main_image = loadImage(result_category);
+                english = loadEnglishEquivalent(result_category);
+                italian = loadItalianEquivalent(result_category);
+            }
+        }
+        for(int i = 0; i < foods.length; i++) {
+            if(word.equalsIgnoreCase(foods[i]) && index == -1){
+                index = i;
+                result_category = getString(R.string.category_name_alimenti);
+                main_image = loadImage(result_category);
+                english = loadEnglishEquivalent(result_category);
+                italian = loadItalianEquivalent(result_category);
+            }
+        }
+        for(int i = 0; i < house.length; i++) {
+            if(word.equalsIgnoreCase(house[i]) && index == -1){
+                index = i;
+                result_category = getString(R.string.category_name_casa);
+                main_image = loadImage(result_category);
+                english = loadEnglishEquivalent(result_category);
+                italian = loadItalianEquivalent(result_category);
+            }
+        }
+        return index;
+    }
+
+    // show dialog
+    public void showNoResultDialog() {
+        final MaterialDialog dialog = new MaterialDialog(this);
+        dialog.setTitle("No Result Found!")
+                .setNegativeButton("Back", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        onBackPressed();
+                    }
+                });
+        dialog.show();
     }
 }

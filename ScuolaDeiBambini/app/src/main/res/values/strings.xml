@@ -4,4 +4,6 @@
     <string name="category_name_numeri">NUMERI</string>
     <string name="category_name_alimenti">ALIMENTI</string>
     <string name="category_name_casa">PARTI DI CASA</string>
+    <string name="category_name_phrase">FRASE</string>
+    <string name="category_name_search">CERCA</string>
 </resources>

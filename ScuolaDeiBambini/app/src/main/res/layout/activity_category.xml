@@ -66,14 +66,26 @@
                     android:background="@android:color/transparent"
                     app:srcCompat="@drawable/btn_casa" />
             </TableRow>
-
             <TableRow
+                android:paddingLeft="5dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                <ImageButton
+                    android:id="@+id/btn_phrase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/btn_frase" />
+
+                <ImageButton
+                    android:id="@+id/btn_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/btn_cerca" />
+            </TableRow>
         </TableLayout>
 
         <include
