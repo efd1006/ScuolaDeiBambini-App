@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import me.drakeet.materialdialog.MaterialDialog;
+
 public class AssessmentActivity extends AppCompatActivity {
 
     RadioButton radio_a, radio_b, radio_c, radio_d;
@@ -61,7 +63,7 @@ public class AssessmentActivity extends AppCompatActivity {
         // setup back button on toolbar
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        imageId = in.getIntegerArrayListExtra("imageId");
         initializeChoices(in.getStringExtra("category_name"));
     }
 
@@ -69,14 +71,12 @@ public class AssessmentActivity extends AppCompatActivity {
     public void initializeChoices(String category_name) {
         if(category_name.equals(getString(R.string.category_name_numeri))){
             // populate the view layout
-            imageId = in.getIntegerArrayListExtra("imageId");
             index = getRandomNumber(0,imageId.size()-1);
             choices.add(index);
             makeChoices();
             Collections.shuffle(choices);
             changeView(index, imageId);
             showListenButton();
-
             // handle EN button event
             btn_en.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -161,11 +161,12 @@ public class AssessmentActivity extends AppCompatActivity {
                         question_counter++;
                         //btn_back.setVisibility(View.VISIBLE);
                     }else{
-                        return;
+                        showDialog();
                     }
                 }
             });
         }else {
+            // different type of activity choice 1,2,3
             hideListenButton();
             // handle EN button event
             instruction_1.setImageResource(R.drawable.en_v2_instruction);
@@ -188,7 +189,32 @@ public class AssessmentActivity extends AppCompatActivity {
                     state = "IT";
                 }
             });
+            changeView(0,imageId);
         }
+    }
+
+    // show dialog
+    public void showDialog() {
+        final MaterialDialog dialog = new MaterialDialog(this);
+        dialog.setTitle("Your Score is: "+score)
+                .setPositiveButton("Start Again", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(AssessmentActivity.this, CategoryActivity.class);
+                        score = 0;
+                        question_counter = 0;
+                        startActivity(intent);
+                        finish();
+                        overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
+                    }
+                })
+                .setNegativeButton("No", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+        dialog.show();
     }
 
     // make the listen button invinsible

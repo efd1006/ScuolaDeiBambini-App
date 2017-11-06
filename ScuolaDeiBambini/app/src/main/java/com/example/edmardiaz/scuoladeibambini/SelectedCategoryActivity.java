@@ -100,11 +100,11 @@ public class SelectedCategoryActivity extends AppCompatActivity {
                 if(counter > 0){
                     counter = counter - 1;
                     changeView(counter);
-                    listen(counter,category_name);
+                    //listen(counter,category_name);
                 }else {
                     counter = 0;
                     changeView(counter);
-                    listen(counter,category_name);
+                    //listen(counter,category_name);
                 }
             }
         });
