@@ -161,7 +161,18 @@ public class AssessmentActivity extends AppCompatActivity {
                         question_counter++;
                         //btn_back.setVisibility(View.VISIBLE);
                     }else{
-                        showDialog();
+                        //showDialog();
+                        Intent intent = new Intent(AssessmentActivity.this, ResultActivity.class);
+                        String remarks = "";
+                        if(score >= 3){
+                            remarks = "You Passed!";
+                        }else{
+                            remarks = "You Failed!";
+                        }
+
+                        intent.putExtra("score","Score: "+score);
+                        intent.putExtra("remarks", remarks);
+                        startActivity(intent);
                     }
                 }
             });
