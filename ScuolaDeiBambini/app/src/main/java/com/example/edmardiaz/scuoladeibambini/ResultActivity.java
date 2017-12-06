@@ -1,15 +1,19 @@
 package com.example.edmardiaz.scuoladeibambini;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by EdmarDiaz on 11/10/2017.
@@ -22,6 +26,9 @@ public class ResultActivity extends AppCompatActivity {
     TextView txt_score, txt_remarks;
     Animation uptodown, downtoup;
     ImageView img_view;
+    Intent getIntent;
+    String score;
+    int int_score;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +36,10 @@ public class ResultActivity extends AppCompatActivity {
         // initialize the components
         initializeComponents();
         // get intent
-        Intent getIntent = getIntent();
+        getIntent = getIntent();
         String remarks = getIntent.getStringExtra("remarks");
-        String score = getIntent.getStringExtra("score");
+        score = getIntent.getStringExtra("score");
+        int_score = getIntent.getIntExtra("int_score",0);
         if(remarks.equalsIgnoreCase("You Passed!")){
             img_view.setImageResource(R.drawable.congrats);
         }else if(remarks.equalsIgnoreCase("You Failed!")){
@@ -46,6 +54,13 @@ public class ResultActivity extends AppCompatActivity {
 
         txt_remarks.setText(remarks);
         txt_score.setText(score);
+
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSubmit();
+            }
+        });
     }
 
     public void initializeComponents() {
@@ -62,5 +77,14 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = new Intent(ResultActivity.this, CategoryActivity.class);
         startActivity(intent);
         super.onBackPressed();
+    }
+
+    public void onSubmit() {
+        SharedPreferences sp = getSharedPreferences("scores", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(getIntent.getStringExtra("category_name"), int_score);
+        editor.apply();
+        startActivity(new Intent(ResultActivity.this, ScoreDashboardActivity.class));
+
     }
 }

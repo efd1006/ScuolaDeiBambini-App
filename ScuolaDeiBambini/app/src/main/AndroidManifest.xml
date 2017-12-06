@@ -8,22 +8,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SplashScreen">
+        <activity android:name=".MainActivity"  android:screenOrientation="portrait"/>
+        <activity android:name=".SplashScreen" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CategoryActivity" />
-        <activity android:name=".SelectedCategoryActivity" />
+        <activity android:name=".CategoryActivity" android:screenOrientation="portrait" />
+        <activity android:name=".SelectedCategoryActivity" android:screenOrientation="portrait"/>
 
         <uses-permission android:name="android.permission.INTERNET" />
         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-        <activity android:name=".AssessmentActivity"></activity>
-        <activity android:name=".ResultActivity" />
+        <activity android:name=".AssessmentActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".ResultActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ScoreDashboardActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

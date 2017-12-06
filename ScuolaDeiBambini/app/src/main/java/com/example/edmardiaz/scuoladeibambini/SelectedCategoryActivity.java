@@ -71,6 +71,7 @@ public class SelectedCategoryActivity extends AppCompatActivity {
             btn_back.setVisibility(View.INVISIBLE);
             btn_activity.setVisibility(View.INVISIBLE);
             btn_next.setVisibility(View.INVISIBLE);
+            btn_info.setVisibility(View.INVISIBLE);
         }
         if(id != -1) {
             // make a nest instance of imageviews and set view to index 0

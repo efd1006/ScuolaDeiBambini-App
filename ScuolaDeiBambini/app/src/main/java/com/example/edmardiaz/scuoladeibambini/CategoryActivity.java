@@ -37,8 +37,8 @@ public class CategoryActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
         setSupportActionBar(toolbar);
         // setup back button on toolbar
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // handle button alphabet event
         btn_school = (ImageButton)findViewById(R.id.btn_school);
@@ -122,7 +122,7 @@ public class CategoryActivity extends AppCompatActivity {
     public void showDialog() {
         final EditText contentView = new EditText(this);
         final MaterialDialog dialog = new MaterialDialog(this);
-        dialog.setTitle("Enter Word")
+        dialog.setTitle("Enter Word in English")
             .setContentView(contentView)
             .setPositiveButton("Search", new View.OnClickListener() {
                 @Override

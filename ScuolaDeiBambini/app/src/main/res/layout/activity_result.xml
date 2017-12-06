@@ -15,8 +15,7 @@
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
-            android:layout_height="247dp"
-            android:background="@drawable/congrats" />
+            android:layout_height="247dp"/>
 
     </LinearLayout>
 

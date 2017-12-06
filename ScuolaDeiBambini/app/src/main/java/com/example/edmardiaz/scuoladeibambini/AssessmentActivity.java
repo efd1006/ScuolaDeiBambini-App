@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +38,9 @@ public class AssessmentActivity extends AppCompatActivity {
     int question_counter = 0;
     String state = "EN";
     Intent in;
+    String[] school = {"CARTELLA","LIBRO","CEDIA","GOMMA","MICROSCOPIO","TACCUINO","PENNA","MATITA","ASTUCCIO","FORBICE","TEMPERAMATITE"};
+    String[] foods = {"BANANA","PANE","TORTA","FORMAGGIO","OUVA","LATTE","BISTECCA","RISO","PANINO","FRAGOLA"};
+    String[] house = {"BAGNO","CAMERA DE LETTO","SALA DA PRANZO","BOX AUTO","GIARDINO","CORRIDOIO","CASA","CUCINA","SOGGIORNO","GABINETTO"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +77,7 @@ public class AssessmentActivity extends AppCompatActivity {
             // populate the view layout
             index = getRandomNumber(0,imageId.size()-1);
             choices.add(index);
-            makeChoices();
+            makeChoices(in.getStringExtra("category_name"));
             Collections.shuffle(choices);
             changeView(index, imageId);
             showListenButton();
@@ -132,13 +136,13 @@ public class AssessmentActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     if(question_counter != (imageId.size()/2)-1) {
                         if(radio_a.isChecked()){
-                            checkAnswer(choices.get(0));
+                            checkAnswer(choices.get(0), in.getStringExtra("category_name"));
                         }else if (radio_b.isChecked()){
-                            checkAnswer(choices.get(1));
+                            checkAnswer(choices.get(1), in.getStringExtra("category_name"));
                         }else if (radio_c.isChecked()){
-                            checkAnswer(choices.get(2));
+                            checkAnswer(choices.get(2), in.getStringExtra("category_name"));
                         }else if(radio_d.isChecked()){
-                            checkAnswer(choices.get(3));
+                            checkAnswer(choices.get(3), in.getStringExtra("category_name"));
                         }else{
                             if(state.equals("EN")){
                                 int duration = Toast.LENGTH_SHORT;
@@ -155,12 +159,32 @@ public class AssessmentActivity extends AppCompatActivity {
                         resetRadioCheck();
                         index = getRandomNumber(0, imageId.size()-1);
                         choices.add(index);
-                        makeChoices();
+                        makeChoices(in.getStringExtra("category_name"));
                         Collections.shuffle(choices);
                         changeView(index, imageId);
                         question_counter++;
                         //btn_back.setVisibility(View.VISIBLE);
                     }else{
+                        if(radio_a.isChecked()){
+                            checkAnswer(choices.get(0), in.getStringExtra("category_name"));
+                        }else if (radio_b.isChecked()){
+                            checkAnswer(choices.get(1), in.getStringExtra("category_name"));
+                        }else if (radio_c.isChecked()){
+                            checkAnswer(choices.get(2), in.getStringExtra("category_name"));
+                        }else if(radio_d.isChecked()){
+                            checkAnswer(choices.get(3), in.getStringExtra("category_name"));
+                        }else{
+                            if(state.equals("EN")){
+                                int duration = Toast.LENGTH_SHORT;
+                                Toast toast = Toast.makeText(getApplicationContext(), "Please Select An Answer", duration);
+                                toast.show();
+                            }else if (state.equals("IT")){
+                                int duration = Toast.LENGTH_SHORT;
+                                Toast toast = Toast.makeText(getApplicationContext(), "Per Favore Seleziona Una Risposta", duration);
+                                toast.show();
+                            }
+                            return;
+                        }
                         //showDialog();
                         Intent intent = new Intent(AssessmentActivity.this, ResultActivity.class);
                         String remarks = "";
@@ -171,6 +195,8 @@ public class AssessmentActivity extends AppCompatActivity {
                         }
 
                         intent.putExtra("score","Score: "+score);
+                        intent.putExtra("category_name", in.getStringExtra("category_name"));
+                        intent.putExtra("int_score",score);
                         intent.putExtra("remarks", remarks);
                         startActivity(intent);
                     }
@@ -179,6 +205,7 @@ public class AssessmentActivity extends AppCompatActivity {
         }else {
             // different type of activity choice 1,2,3
             hideListenButton();
+            next_question();
             // handle EN button event
             instruction_1.setImageResource(R.drawable.en_v2_instruction);
             instruction_2.setImageResource(R.drawable.en_v2_instruction_2);
@@ -200,7 +227,41 @@ public class AssessmentActivity extends AppCompatActivity {
                     state = "IT";
                 }
             });
-            changeView(0,imageId);
+
+            btn_1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String ans = btn_1.getText().toString();
+                    checkAnswer2(ans,in.getStringExtra("category_name"));
+                    question_counter++;
+                    choices.clear();
+                    next_question();
+                    Log.d("score", Integer.toString(score));
+                }
+            });
+            btn_2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String ans = btn_2.getText().toString();
+                    checkAnswer2(ans,in.getStringExtra("category_name"));
+                    question_counter++;
+                    choices.clear();
+                    next_question();
+                    Log.d("score", Integer.toString(score));
+                }
+            });
+            btn_3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String ans = btn_3.getText().toString();
+                    checkAnswer2(ans,in.getStringExtra("category_name"));
+                    question_counter++;
+                    choices.clear();
+                    next_question();
+                    Log.d("score", Integer.toString(score));
+                }
+            });
+
         }
     }
 
@@ -272,17 +333,31 @@ public class AssessmentActivity extends AppCompatActivity {
     }
 
     //generate random choices
-    public void makeChoices() {
-        int x = getRandomNumber(0,imageId.size()-1);
+    public void makeChoices(String cat_name) {
+        if(cat_name.equalsIgnoreCase(getString(R.string.category_name_numeri))) {
+            int x = getRandomNumber(0, imageId.size() - 1);
 
-        for(int i=0;i<3;i++) {
-            if(!choices.contains(x)){
-                choices.add(x);
-            }else{
-                do {
-                    x = getRandomNumber(0,imageId.size()-1);
-                } while(index == x || choices.contains(x));
-                choices.add(x);
+            for (int i = 0; i < 3; i++) {
+                if (!choices.contains(x)) {
+                    choices.add(x);
+                } else {
+                    do {
+                        x = getRandomNumber(0, imageId.size() - 1);
+                    } while (index == x || choices.contains(x));
+                    choices.add(x);
+                }
+            }
+        }else{
+            int x = getRandomNumber(0, imageId.size() - 1);
+            for (int i = 0; i < 2; i++) {
+                if (!choices.contains(x)) {
+                    choices.add(x);
+                } else {
+                    do {
+                        x = getRandomNumber(0, imageId.size() - 1);
+                    } while (index == x || choices.contains(x));
+                    choices.add(x);
+                }
             }
         }
     }
@@ -321,9 +396,43 @@ public class AssessmentActivity extends AppCompatActivity {
     }
 
     // check the correct answer
-    public void checkAnswer(int correct_ans) {
-        if(correct_ans == index) {
-            score++;
+    public void checkAnswer(int answer, String cat_name) {
+        if(cat_name.equalsIgnoreCase(getString(R.string.category_name_numeri))) {
+            if (answer == index) {
+                score++;
+            }
+        }
+    }
+    // overloading
+    public void checkAnswer2(String answer, String cat_name) {
+        int index_ans;
+        if(cat_name.equalsIgnoreCase(getString(R.string.category_name_scuola))){
+            for(int i = 0; i<school.length;i++){
+                if(school[i].equalsIgnoreCase(answer)){
+                    index_ans = i;
+                    if(index_ans == index){
+                        score++;
+                    }
+                }
+            }
+        }else if(cat_name.equalsIgnoreCase(getString(R.string.category_name_alimenti))){
+            for(int i = 0; i<foods.length;i++){
+                if(foods[i].equalsIgnoreCase(answer)){
+                    index_ans = i;
+                    if(index_ans == index){
+                        score++;
+                    }
+                }
+            }
+        }else if(cat_name.equalsIgnoreCase(getString(R.string.category_name_casa))){
+            for(int i = 0; i<house.length;i++){
+                if(house[i].equalsIgnoreCase(answer)){
+                    index_ans = i;
+                    if(index_ans == index){
+                        score++;
+                    }
+                }
+            }
         }
     }
 
@@ -491,4 +600,50 @@ public class AssessmentActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+    public void fillTextboxChoice(String cat_name, ArrayList<Integer> choices){
+        if(cat_name.equalsIgnoreCase(getString(R.string.category_name_scuola))){
+            btn_1.setText(school[choices.get(0)]);
+            btn_2.setText(school[choices.get(1)]);
+            btn_3.setText(school[choices.get(2)]);
+        }else if(cat_name.equalsIgnoreCase(getString(R.string.category_name_alimenti))){
+            btn_1.setText(foods[choices.get(0)]);
+            btn_2.setText(foods[choices.get(1)]);
+            btn_3.setText(foods[choices.get(2)]);
+        }else if(cat_name.equalsIgnoreCase(getString(R.string.category_name_casa))){
+            btn_1.setText(house[choices.get(0)]);
+            btn_2.setText(house[choices.get(1)]);
+            btn_3.setText(house[choices.get(2)]);
+        }
+    }
+
+    public void next_question() {
+        if (question_counter != (imageId.size())) {
+            index = getRandomNumber(0,imageId.size()-1);
+            choices.add(index);
+            makeChoices(in.getStringExtra("category_name"));
+            Collections.shuffle(choices);
+            changeView(index, imageId);
+            fillTextboxChoice(in.getStringExtra("category_name"), choices);
+        }else{
+            Intent intent = new Intent(AssessmentActivity.this, ResultActivity.class);
+            String remarks = "";
+            if(score >= 5){
+                remarks = "You Passed!";
+            }else{
+                remarks = "You Failed!";
+            }
+
+            intent.putExtra("score","Score: "+score);
+            intent.putExtra("int_score",score);
+            intent.putExtra("remarks", remarks);
+            intent.putExtra("category_name", in.getStringExtra("category_name"));
+            startActivity(intent);
+        }
+    }
 }
