@@ -6,6 +6,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -104,19 +106,37 @@ public class CategoryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == android.R.id.home) {
-            this.finish();
+        switch (id){
+            case R.id.home:
+                this.finish();
+                break;
+            case R.id.viewGrade:
+                Intent i = new Intent(CategoryActivity.this, ScoreDashboardActivity.class);
+                startActivity(i);
         }
+
         return super.onOptionsItemSelected(item);
     }
 
-    public void goToSelected(String category_name) {
-        Intent intent = new Intent(CategoryActivity.this, SelectedCategoryActivity.class);
-        intent.putExtra("category_name", category_name);
-        intent.putExtra("isSearching", isSearching);
-        startActivity(intent);
-        overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    public void goToSelected(String category_name) {
+        if(!category_name.equals(getString(R.string.category_name_phrase))){
+            Intent intent = new Intent(CategoryActivity.this, SelectedCategoryActivity.class);
+            intent.putExtra("category_name", category_name);
+            intent.putExtra("isSearching", isSearching);
+            startActivity(intent);
+            overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
+        }else{
+            Intent intentt = new Intent(CategoryActivity.this, PhraseActivity.class);
+            startActivity(intentt);
+            overridePendingTransition(R.transition.slide_in, R.transition.slide_out);
+        }
     }
     // show dialog
     public void showDialog() {

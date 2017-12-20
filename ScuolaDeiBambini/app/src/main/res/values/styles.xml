@@ -7,5 +7,7 @@
         <item name="colorPrimaryDark">@color/titlebar</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:homeAsUpIndicator">@drawable/btn_back</item>
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">-5dp</item>
     </style>
 </resources>

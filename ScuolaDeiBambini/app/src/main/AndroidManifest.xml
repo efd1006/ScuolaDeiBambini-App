@@ -25,6 +25,7 @@
         <activity android:name=".AssessmentActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".ResultActivity" android:screenOrientation="portrait" />
         <activity android:name=".ScoreDashboardActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".PhraseActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
